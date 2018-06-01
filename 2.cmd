@@ -158,3 +158,73 @@ body{
   document.body.append(img)
 
 ```
+
+## html 插件 html-webpack-plugin
+插件的作用:是以我们自己的html为模板,将打包后的结果,自动引入dist目录下的html 中
+1 安装:
+  npm install html-webpack-plugin --save-dev
+2 修改webpack.config.js
+
+```
+ let path=require("path");
+let htmlWebpackPlugin=require("html-webpack-plugin");
+module.exports={
+
+    entry:"./src/main.js", //入口
+    output:{
+        path:path.resolve("./dist"), //把相对路径解析成绝对路径
+        filename:"bundle.js" //打包后的文件名字
+       
+    },
+    module:{
+        rules:[
+            {test:/\.js$/,
+             use:"babel-loader",
+             exclude:/node_module/
+            },
+            {test:/\.css$/,
+             use:["style-loader","css-loader"]  
+            }, 
+            {test:/\.less$/,
+                use:["style-loader","css-loader","less-loader"]  
+            },
+            {
+              test:/\.(jpg|png|gif)$/,
+              use:"url-loader?limit=8192"
+            }
+        ]
+    },
+    plugins:[
+       new htmlWebpackPlugin({
+           template:"./src/default.html"  //找到这个模板路径,会在dist 中产生一个以这样模板的index.html(默认是index.html)
+           filename:"index2.html" //修改dist 中默认的index.html 名字为:"index2.html"
+       })
+    ]
+}
+
+```  
+
+
+
+
+##  我们并不想每次都用npm run build;为此我们可以webpack-dev-server
+这里面内置了一个服务,帮我们开启了一个端口号,当代码更新时可以自动打包(内存中打包),
+代码有变化时重新执行.
+1 下载
+   npm install webpack-dev-server --save-dev
+2 修改配置package.json 
+
+```
+   "scripts": {
+    "build": "webpack",
+    "dev"  :"webpack-dev-server"  //当执行npm run dev 的时候运行的是.bin 下面的webpack-dev-server.js
+  },
+```
+3 运行 npm run dev
+
+如果报错" Cannot find module 'webpack-cli/bin/config-yargs",
+是因为安装的webpack 和webpack-dev-server 版本不匹配.
+目前安装的webpack 的版本:3.0
+webpack-dev-server 的版本:3.0 报错,卸载 cnpm uninstall webpack-dev-server@3 --save-dev
+重新安装cnpm install webpack-dev-server@2 --save-dev
+      

@@ -1,4 +1,5 @@
 let path=require("path");
+let htmlWebpackPlugin=require("html-webpack-plugin");
 module.exports={
 
     entry:"./src/main.js", //入口
@@ -24,5 +25,11 @@ module.exports={
               use:"url-loader?limit=8192"
             }
         ]
-    }
+    },
+    plugins:[
+       new htmlWebpackPlugin({
+           template:"./src/default.html",
+           filename:"default2.html"  
+       })
+    ]
 }
